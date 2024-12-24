@@ -1,6 +1,7 @@
 import { User } from "../models/usermodel.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import getDataUri from "../utils/datauri.js";
 export const register = async (req, res) => {
     try {
         const {username, email, password} = req.body
@@ -121,6 +122,9 @@ export const editProfile = async (req, res) => {
         let cloudResponse;
         const {bio, gender} = req.body;
         const profilePicture = req.file
+        if (profilePicture) {
+            const fileUri = getDataUri(profilePicture)
+        }
         
         
     } catch (error) {
