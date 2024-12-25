@@ -156,3 +156,66 @@ export const editProfile = async (req, res) => {
         
     }
 }
+
+export const getSuggestion = async (req, res) => {
+    try {
+        const suggestedUser = await User.find({_id:{$ne:req.id}}).select('-password')
+
+        if (suggestedUser) {
+            return res.status(400).json({
+                message:"currently no users found",
+            })
+        }
+        return res.status(400).json({
+            success:true,
+            user:suggestedUser
+        })
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+export const followOrUnfolllow = async (req, res) => {
+    try {
+        const person_who_will_follow = req.id
+        const person_who_will_be_followed = req.params.id
+        if (person_who_will_be_followed === person_who_will_follow) {
+            return res.status(400).json({
+                message:"You can't follow yourself",
+                success:false
+            })
+        }
+        const user = await User.findById({person_who_will_follow})
+        const targetUser = await User.findById({person_who_will_be_followed})
+        if (!user || !targetUser) {
+            return res.status(400).json({
+                message:'User not found',
+                success:false
+            })
+        }
+        const isfollowing = await user.following.includes(person_who_will_be_followed)
+        if (isfollowing) {
+            // unfollow logic
+            
+         await Promise.all([
+                User.updateOne({_id:person_who_will_follow},{$pull:{following:person_who_will_be_followed}}),
+                User.updateOne({_id:person_who_will_be_followed},{$pull:{follower:person_who_will_follow}})
+        ])
+
+            return res.status(200).json({message:'followed successfully'})
+            
+        } else{
+            //follow logic
+            await Promise.all([
+                User.updateOne({_id:person_who_will_follow},{$push:{following:person_who_will_be_followed}}),
+                User.updateOne({_id:person_who_will_be_followed},{$push:{follower:person_who_will_follow}})
+            ])
+            return res.status(200).json({message:'followed successfully'})
+        }
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+
