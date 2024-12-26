@@ -4,6 +4,7 @@ import bcyrpt from 'bcryptjs'
 import cookieParser from 'cookie-parser';
 import getDataUri from '../utils/datauri.js';
 import cloudinary from '../utils/cloudinary.js';
+import { Post } from '../models/postmodel.js';
 
 export const register = async (req, res) => {
   try {
@@ -66,6 +67,17 @@ export const login = async (req, res) => {
         message: "Incorrect email or password",
       });
     }
+    const token = jwt.sign({ userid: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "1d",
+    });
+    const populatePost = await Promise.all(
+        user.posts.map(async(postId)=>{
+            const post = await Post.findById(postId)
+            if(post.author.equals(user._id)){
+                return post
+            } else{ return null}
+        })
+    )
 
     user = {
       _id: user._id,
@@ -73,21 +85,16 @@ export const login = async (req, res) => {
       email: user.email,
       profilePicture: user.profilePicture,
       bio: user.bio,
-      posts: user.posts,
+      posts: populatePost,
       followers: user.follower,
       following: user.following,
     };
 
-    const token = jwt.sign({ userid: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "1d",
-    });
-    return res
-      .cookie("token", token, {
+    return res.cookie("token", token, {
         httpOnly: true,
         sameSite: "strict",
         maxAge: 1 * 24 * 60 * 60 * 1000,
-      })
-      .json({
+      }).json({
         message: `Welcome back ${user.username}`,
         success: true,
         user,

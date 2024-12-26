@@ -1,5 +1,5 @@
-import { Conversation } from "../models/conversationmodle";
-import { Message } from "../models/messagemodel";
+import { Conversation } from "../models/conversationmodle.js";
+import { Message } from "../models/messagemodel.js";
 
 // for chatting
 export const sendMessage = async (req, res) => {
