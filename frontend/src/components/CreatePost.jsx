@@ -3,6 +3,8 @@ import { Dialog, DialogContent } from "./ui/dialog";
 import { TbPhotoVideo } from "react-icons/tb";
 import { readFileAsDataURL } from "@/lib/utils"; // Assuming this is a utility function for reading file as Data URL
 import { Button } from "./ui/button";
+import { assets } from "@/assets/asset.js";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const CreatePost = ({ open, setOpen }) => {
   const imageRef = useRef();
@@ -42,17 +44,27 @@ const CreatePost = ({ open, setOpen }) => {
   const changeFilter = (filtername) => {
     setFilter(filtername); // Update the applied filter class
   };
+  const [toggle, setToggle] = useState(1);
+  const toggleTab = (index) => {
+    setToggle(index);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         onInteractOutside={() => setOpen(false)}
-        className={`p-1 transition-all duration-500 ${imagePreview? 'scale-x-[1.7] scale-y-[1.4]': 'scale-100' }`}
+        className={`p-1 transition-all duration-500 ${
+          imagePreview ? "scale-x-[1.7] scale-y-[1.4]" : "scale-100"
+        }`}
       >
         <div>
           {/* Header */}
-          <div className={`font-normal p-1 flex justify-center transition-all duration-500 ${imagePreview? 'scale-75': 'scale-100' }`}>
-            <p >Create new post</p>
+          <div
+            className={`font-normal p-1 flex justify-center transition-all duration-500 ${
+              imagePreview ? "scale-75" : "scale-100"
+            }`}
+          >
+            <p>Create new post</p>
           </div>
           <hr className="border-b-1 border-gray-400" />
 
@@ -67,40 +79,83 @@ const CreatePost = ({ open, setOpen }) => {
               />
 
               <div className="flex flex-col items-center justify-between">
-                <div className="tabs flex justify-between gap-10 pb-4">
-                    <button className="tab text-[.5rem]">Filter</button>
-                    <button className="tab text-[.5rem]">Adjustment</button>
-                    <button className="tab text-[.5rem]">Post</button>
+                <div className="tabs flex justify-between gap-8 p-2">
+                  <button
+                    className="tab text-[.6rem]"
+                    onClick={() => toggleTab(1)}
+                  >
+                    Filter
+                  </button>
+                  <button
+                    className="tab text-[.6rem]"
+                    onClick={() => toggleTab(2)}
+                  >
+                    Adjustment
+                  </button>
+                  <button
+                    className="tab text-[.6rem]"
+                    onClick={() => toggleTab(3)}
+                  >
+                    Post
+                  </button>
                 </div>
                 {/* Filter Buttons */}
-              <div className="flex flex-wrap w-[11rem] items-start gap-2 mb-20">
-                {filterList.map((filterObj) => (
-                  <Button
-                    key={filterObj.filtername}
-                    className={`filter-btn text-[.4rem] w-[3.2rem] h-[3.2rem] rounded-none ${filter === filterObj.filtername ? filterObj.filtername : 'bg-blue-300'}`}
-                    style={{
-                        backgroundImage: `url('')`, // Use your own image URL here
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
-                    onClick={() => changeFilter(filterObj.filtername)}
+                <div className="flex flex-wrap w-[11rem] items-start gap-2 mb-20">
+                  {filterList.map((filterObj) => (
+                    <div className={toggle === 1 ? "block" : "hidden"}>
+                      <Button
+                        key={filterObj.filtername}
+                        className={`filter-btn text-[.4rem] w-[3.2rem] h-[4.45rem] rounded-none ${
+                          filter === filterObj.filtername
+                            ? "border-2 border-blue-500"
+                            : ""
+                        }`}
+                        style={{
+                          backgroundImage: `url(${assets[filterObj.name]})`, // Dynamically select image from assets
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                        onClick={() => changeFilter(filterObj.filtername)}
+                      >
+                        {filterObj.name}
+                      </Button>
+                    </div>
+                  ))}
+                  {/* adjustment */}
+                  <div className={toggle === 2 ? "block" : "hidden"}></div>
+                  {/* post the image */}
+                  <div className={toggle === 3 ? "block" : "hidden"}>
+                    <div className="flex-ro h-[2rem] w-full justify-between">
+                    <Avatar>
+                      <AvatarImage
+                        src="https://github.com/shadcn.png"
+                        alt="@shadcn"
+                        className="w-6 h-7 rounded-full"
+                      />
+                      <AvatarFallback className="w-6 h-7 rounded-full bg-gray-200 text-sm">
+                        CN
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className="text-[.7rem] pt-1">bio here..</p>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                    <textarea name="" className="outline-none w-[10rem] h-[9rem] text-[.7rem]" placeholder="Write a caption....." id=""></textarea>
+                    
+                        <input className="text-[.7rem] outline-none" placeholder="Add alt text"/>
+                    
+                    <Button
+                    className="text-[.7rem] text-blue-500" variant='ghost'
+                    onClick={handlePostCreate}
                   >
-                    {filterObj.name}
+                    Create Post
                   </Button>
-                ))}
-              </div>
-              <div>
-              <button 
-                className="w-20 h-8 text-[.7rem] bg-blue-500 rounded text-white"
-                onClick={handlePostCreate}
-              >
-                Create Post
-              </button>
-              </div>
+                    </div>
+                  </div>
+                  
+                </div>
               </div>
 
               {/* Create Post Button */}
-              
             </div>
           ) : (
             <div className="h-80 flex flex-col gap-3 justify-center items-center">
