@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Dialog, DialogContent } from "./ui/dialog";
 import { TbPhotoVideo } from "react-icons/tb";
-import { readFileAsDataURL } from "@/lib/utils"; // Assuming this is a utility function for reading file as Data URL
+import { readFileAsDataURL } from "@/lib/utils"; // Utility for reading file as Data URL
 import { Button } from "./ui/button";
 import { assets } from "@/assets/asset.js";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -10,7 +10,11 @@ const CreatePost = ({ open, setOpen }) => {
   const imageRef = useRef();
   const [imgFile, setImgFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
-  const [filter, setFilter] = useState(""); // Holds the currently applied filter class
+  const [imgfilter, setImgFilter] = useState(""); // Holds the currently applied filter class
+  const [brightness, setBrightness] = useState(100);
+  const [contrast, setContrast] = useState(100);
+  const [fade, setFade] = useState(0);
+  const [saturation, setSaturation] = useState(100);
 
   const filterList = [
     { filtername: "imgIvory", name: "Ivory" },
@@ -36,17 +40,24 @@ const CreatePost = ({ open, setOpen }) => {
 
   // Function to handle post creation logic
   const handlePostCreate = () => {
-    // Add your post creation logic here (e.g., upload the image, save the caption, etc.)
     setOpen(false); // Close the dialog after post creation
   };
 
   // Function to change the filter
   const changeFilter = (filtername) => {
-    setFilter(filtername); // Update the applied filter class
+    setImgFilter(filtername); // Update the applied filter class
   };
+
   const [toggle, setToggle] = useState(1);
   const toggleTab = (index) => {
     setToggle(index);
+  };
+
+  // Dynamic style for adjustments
+  const getAdjustmentStyle = () => {
+    return {
+      filter: `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%) opacity(${100 - fade}%)`,
+    };
   };
 
   return (
@@ -71,11 +82,12 @@ const CreatePost = ({ open, setOpen }) => {
           {/* Image and Filters Section */}
           {imagePreview ? (
             <div className="flex items-center gap-2">
-              {/* Image preview with applied filter */}
+              {/* Image preview with applied filter and adjustments */}
               <img
                 src={imagePreview}
                 alt="Preview"
-                className={`w-[20rem] h-80 object-cover rounded-t-lg mb-4 ${filter}`}
+                className={`w-[20rem] h-80 object-cover rounded-t-lg mb-4 ${imgfilter}`} // Apply the selected filter class
+                style={getAdjustmentStyle()} // Combine the filter class with dynamic style
               />
 
               <div className="flex flex-col items-center justify-between">
@@ -102,11 +114,10 @@ const CreatePost = ({ open, setOpen }) => {
                 {/* Filter Buttons */}
                 <div className="flex flex-wrap w-[11rem] items-start gap-2 mb-20">
                   {filterList.map((filterObj) => (
-                    <div className={toggle === 1 ? "block" : "hidden"}>
+                    <div className={toggle === 1 ? "block" : "hidden"} key={filterObj.filtername}>
                       <Button
-                        key={filterObj.filtername}
                         className={`filter-btn text-[.4rem] w-[3.2rem] h-[4.45rem] rounded-none ${
-                          filter === filterObj.filtername
+                          imgfilter === filterObj.filtername
                             ? "border-2 border-blue-500"
                             : ""
                         }`}
@@ -115,47 +126,102 @@ const CreatePost = ({ open, setOpen }) => {
                           backgroundSize: "cover",
                           backgroundPosition: "center",
                         }}
-                        onClick={() => changeFilter(filterObj.filtername)}
+                        onClick={() => changeFilter(filterObj.filtername)} // Apply the selected filter
                       >
                         {filterObj.name}
                       </Button>
                     </div>
                   ))}
-                  {/* adjustment */}
-                  <div className={toggle === 2 ? "block" : "hidden"}></div>
-                  {/* post the image */}
-                  <div className={toggle === 3 ? "block" : "hidden"}>
-                    <div className="flex-ro h-[2rem] w-full justify-between">
-                    <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        alt="@shadcn"
-                        className="w-6 h-7 rounded-full"
-                      />
-                      <AvatarFallback className="w-6 h-7 rounded-full bg-gray-200 text-sm">
-                        CN
-                      </AvatarFallback>
-                    </Avatar>
-                    <p className="text-[.7rem] pt-1">bio here..</p>
-                    </div>
-                    <div className="flex flex-col justify-center">
-                    <textarea name="" className="outline-none w-[10rem] h-[9rem] text-[.7rem]" placeholder="Write a caption....." id=""></textarea>
-                    
-                        <input className="text-[.7rem] outline-none" placeholder="Add alt text"/>
-                    
-                    <Button
-                    className="text-[.7rem] text-blue-500" variant='ghost'
-                    onClick={handlePostCreate}
-                  >
-                    Create Post
-                  </Button>
+
+                  {/* Adjustment Sliders */}
+                  <div className={toggle === 2 ? "block" : "hidden"}>
+                    <div className="flex flex-col space-y-4">
+                      <div className="flex items-center">
+                        <label className="mr-2 text-sm">Brightness</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="200"
+                          value={brightness}
+                          onChange={(e) => setBrightness(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="flex items-center">
+                        <label className="mr-2 text-sm">Contrast</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="200"
+                          value={contrast}
+                          onChange={(e) => setContrast(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="flex items-center">
+                        <label className="mr-2 text-sm">Fade</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={fade}
+                          onChange={(e) => setFade(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="flex items-center">
+                        <label className="mr-2 text-sm">Saturation</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="200"
+                          value={saturation}
+                          onChange={(e) => setSaturation(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
                     </div>
                   </div>
-                  
+
+                  {/* Post Section */}
+                  <div className={toggle === 3 ? "block" : "hidden"}>
+                    <div className="flex-ro h-[2rem] w-full justify-between">
+                      <Avatar>
+                        <AvatarImage
+                          src="https://github.com/shadcn.png"
+                          alt="@shadcn"
+                          className="w-6 h-7 rounded-full"
+                        />
+                        <AvatarFallback className="w-6 h-7 rounded-full bg-gray-200 text-sm">
+                          CN
+                        </AvatarFallback>
+                      </Avatar>
+                      <p className="text-[.7rem] pt-1">bio here..</p>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <textarea
+                        name=""
+                        className="outline-none w-[10rem] h-[9rem] text-[.7rem]"
+                        placeholder="Write a caption....."
+                        id=""
+                      ></textarea>
+
+                      <input
+                        className="text-[.7rem] outline-none"
+                        placeholder="Add alt text"
+                      />
+
+                      <Button
+                        className="text-[.7rem] text-blue-500"
+                        variant="ghost"
+                        onClick={handlePostCreate}
+                      >
+                        Create Post
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              {/* Create Post Button */}
             </div>
           ) : (
             <div className="h-80 flex flex-col gap-3 justify-center items-center">
