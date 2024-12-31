@@ -68,3 +68,40 @@
   font-weight: 400;
   font-style: normal;
 }
+/* Define filter styles */
+.imgIvory {
+    filter: sepia(0.2) brightness(1.1) contrast(0.85) saturate(0.9);
+
+}
+
+.imgAden {
+  filter: contrast(120%) brightness(90%) sepia(40%);
+}
+
+.imgClarendon {
+  filter: contrast(110%) brightness(120%) saturate(120%);
+}
+
+.imgCrema {
+  filter: contrast(90%) brightness(110%) sepia(30%);
+}
+
+.imgGingham {
+  filter: contrast(80%) brightness(100%) saturate(90%) sepia(60%);
+}
+
+.imgJuno {
+  filter: contrast(100%) brightness(105%) saturate(140%);
+}
+
+.imgLark {
+  filter: contrast(115%) brightness(105%) saturate(110%);
+}
+
+.imgLudwig {
+  filter: contrast(130%) brightness(110%) saturate(100%);
+}
+
+.imgMoon {
+  filter: grayscale(100%) brightness(90%);
+}
