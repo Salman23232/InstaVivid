@@ -7,7 +7,7 @@ import Lark from './Lark.png';
 import Ludwig from './Ludwing.png';
 import Moon from './Moon.png';
 import Ivory from './filter.png';
-
+import Instagram from './instagram-web-lox-image.png'
 export const assets = {
   Aden,
   Clarendon,
@@ -18,4 +18,6 @@ export const assets = {
   Ludwig,
   Moon,
   Ivory,
+  Instagram
+  
 };

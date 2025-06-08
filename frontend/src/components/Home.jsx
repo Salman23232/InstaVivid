@@ -6,11 +6,8 @@ import RightSidebar from './RightSidebar'
 const Home = () => {
   return (
     <div className='flex'>
-      <div className='flex-grow'>
         <Feed/>
-        <Outlet/>
-      </div>
-    <RightSidebar/>
+                <RightSidebar />
     </div>
   )
 }

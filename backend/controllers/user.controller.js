@@ -1,7 +1,6 @@
 import {User} from '../models/usermodel.js'
 import jwt from 'jsonwebtoken'
-import bcyrpt from 'bcryptjs'
-import cookieParser from 'cookie-parser';
+import bcrypt from 'bcryptjs'
 import getDataUri from '../utils/datauri.js';
 import cloudinary from '../utils/cloudinary.js';
 import { Post } from '../models/postmodel.js';
@@ -25,7 +24,7 @@ export const register = async (req, res) => {
       });
     }
 
-    const hashedPassword = await bcyrpt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({
       username,
       password: hashedPassword,
@@ -56,11 +55,11 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "Incorrect email or password",
+        message: "Incorrect email or password",  
       });
     }
 
-    const isMatchedPassword = await bcyrpt.compare(password, user.password);
+    const isMatchedPassword = await bcrypt.compare(password, user.password);
     if (!isMatchedPassword) {
       return res.status(401).json({
         success: false,
@@ -70,14 +69,7 @@ export const login = async (req, res) => {
     const token = jwt.sign({ userid: user._id }, process.env.SECRET_KEY, {
       expiresIn: "1d",
     });
-    const populatePost = await Promise.all(
-        user.posts.map(async(postId)=>{
-            const post = await Post.findById(postId)
-            if(post.author.equals(user._id)){
-                return post
-            } else{ return null}
-        })
-    )
+
 
     user = {
       _id: user._id,
@@ -85,7 +77,7 @@ export const login = async (req, res) => {
       email: user.email,
       profilePicture: user.profilePicture,
       bio: user.bio,
-      posts: populatePost,
+      posts: user.posts,
       followers: user.follower,
       following: user.following,
     };
@@ -107,7 +99,37 @@ export const login = async (req, res) => {
 export const getProfile = async (req, res) => {
   try {
     const userid = req.params.id;
-    const user = await User.findById(userid);
+
+    const user = await User.findById(userid)
+    .populate({path:'bookmarks',populate:[
+      {
+            path: 'author',
+            select: 'username profilePicture',
+          },
+          {
+            path: 'comments',
+            populate: {
+              path: 'author',
+              select: 'username profilePicture',
+            }
+      
+   } ]})
+      .populate({
+        path: 'posts',
+        populate: [
+          {
+            path: 'author',
+            select: 'username profilePicture',
+          },
+          {
+            path: 'comments',
+            populate: {
+              path: 'author',
+              select: 'username profilePicture',
+            },
+          },
+        ],
+      });
 
     if (!user) {
       return res.status(404).json({
@@ -116,26 +138,47 @@ export const getProfile = async (req, res) => {
       });
     }
 
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const getAllUser = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    const searchFilter = query
+      ? {
+          $or: [
+            { username: { $regex: query, $options: "i" } },
+            { email: { $regex: query, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const users = await User.find(searchFilter).populate("posts");
+
     return res.status(200).json({
-      user,
       success: true,
+      users,
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while fetching users.",
+    });
   }
 };
+
 
 export const editProfile = async (req, res) => {
   try {
     const userid = req.id;
-    const { bio, gender } = req.body;
-    const profilePicture = req.file;
-    let cloudResponse;
-
-    if (profilePicture) {
-      const fileUri = getDataUri(profilePicture);
-      cloudResponse = await cloudinary.uploader.upload(fileUri);
-    }
+    const { bio, username } = req.body;
+    const profilePicture = req.file?.path
 
     const user = await User.findById(userid).select('-password');
     if (!user) {
@@ -145,20 +188,57 @@ export const editProfile = async (req, res) => {
       });
     }
 
+
     if (bio) user.bio = bio;
-    if (gender) user.gender = gender;
-    if (profilePicture) user.profilePicture = cloudResponse.secure_url;
+    if (username) user.username = username;
+    if (profilePicture) user.profilePicture = profilePicture;
 
     await user.save();
-    return res.status(200).json({
-      message: "Profile updated",
-      success: true,
-      user
-    });
+    return res.status(200).json(
+      user);
   } catch (error) {
     console.log(error);
   }
 };
+
+export const getMe = async (req, res) => {
+  const userId = req.id;
+
+  const user = await User.findById(userId)
+  .populate({path:'bookmarks',populate:[
+      {
+            path: 'author',
+            select: 'username profilePicture',
+          },
+          {
+            path: 'comments',
+            populate: {
+              path: 'author',
+              select: 'username profilePicture',
+            }
+      
+   } ]})
+    .populate({
+      path: 'posts',
+      populate: [
+        {
+          path: 'author',
+          select: 'username profilePicture',
+        },
+        {
+          path: 'comments',
+          populate: {
+            path: 'author',
+            select: 'username profilePicture',
+          },
+        }
+      ]
+    });
+
+  return res.status(200).json(user);
+};
+
+
 
 export const getSuggestedUser = async (req, res) => {
   try {
@@ -183,76 +263,39 @@ export const getSuggestedUser = async (req, res) => {
 };
 
 export const followOrUnfolllow = async (req, res) => {
-    try {
-      const person_who_will_follow = req.id; // Current user's ID
-      const person_who_will_be_followed = req.params.id; // Target user's ID
-  
-      // Prevent a user from following themselves
-      if (person_who_will_be_followed === person_who_will_follow) {
-        return res.status(400).json({
-          message: "You can't follow yourself",
-          success: false,
-        });
-      }
-  
-      // Find the users by their IDs
-      const user = await User.findById(person_who_will_follow);
-      const targetUser = await User.findById(person_who_will_be_followed);
-  
-      // Check if either user is not found
-      if (!user || !targetUser) {
-        return res.status(404).json({
-          message: "User not found",
-          success: false,
-        });
-      }
-  
-      // Check if the user is already following the target user
-      const isFollowing = user.following.includes(person_who_will_be_followed);
-  
-      if (isFollowing) {
-        // Unfollow logic
-        await Promise.all([
-          User.updateOne(
-            { _id: person_who_will_follow },
-            { $pull: { following: person_who_will_be_followed } }
-          ),
-          User.updateOne(
-            { _id: person_who_will_be_followed },
-            { $pull: { follower: person_who_will_follow } }
-          ),
-        ]);
-  
-        return res.status(200).json({
-          message: "Unfollowed successfully",
-          success: true,
-        });
-      } else {
-        // Follow logic
-        await Promise.all([
-          User.updateOne(
-            { _id: person_who_will_follow },
-            { $push: { following: person_who_will_be_followed } }
-          ),
-          User.updateOne(
-            { _id: person_who_will_be_followed },
-            { $push: { follower: person_who_will_follow } }
-          ),
-        ]);
-  
-        return res.status(200).json({
-          message: "Followed successfully",
-          success: true,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        message: "Server error. Please try again later.",
-        success: false,
-      });
-    }
-  };
+  const followerId = req.id; // Logged-in user
+  const followeeId = req.params.id; // User to follow/unfollow
+
+  if (followerId === followeeId) {
+    return res.status(400).json({ message: "You can't follow yourself", success: false });
+  }
+
+  const user = await User.findById(followerId);
+  const targetUser = await User.findById(followeeId);
+
+  if (!user || !targetUser) {
+    return res.status(404).json({ message: "User not found", success: false });
+  }
+
+  const isFollowing = user.following.includes(followeeId);
+
+  if (isFollowing) {
+    // Unfollow
+    await Promise.all([
+      User.updateOne({ _id: followerId }, { $pull: { following: followeeId } }),
+      User.updateOne({ _id: followeeId }, { $pull: { follower: followerId } }),
+    ]);
+    return res.status(200).json({ message: "Unfollowed successfully", success: true });
+  } else {
+    // Follow
+    await Promise.all([
+      User.updateOne({ _id: followerId }, { $push: { following: followeeId } }),
+      User.updateOne({ _id: followeeId }, { $push: { follower: followerId } }),
+    ]);
+    return res.status(200).json({ message: "Followed successfully", success: true });
+  }
+};
+
   
 
 export const logout = async (_, res) => {

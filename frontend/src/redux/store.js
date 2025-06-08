@@ -10,6 +10,9 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import Socketslice from "./Socketslice.js";
+import Chatslice from "./Chatslice.js";
+import Notificationslice from "./Notificationslice.js";
 
 const persistConfig = {
   key: "root",
@@ -19,6 +22,9 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     auth:Authslice,
+    socket:Socketslice,
+    chat:Chatslice,
+    notification:Notificationslice
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
