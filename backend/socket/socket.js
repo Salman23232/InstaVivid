@@ -7,7 +7,7 @@ export const app = express()
 export const server = http.createServer(app)
 export const io = new Server(server,{
 cors:{
-    origin:"https://instavivid-e56v.onrender.com",
+    origin:["https://instavivd-231.vercel.app","http://localhost:5173"],
     methods:['GET','POST']
 }
 })
