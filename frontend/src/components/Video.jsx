@@ -10,6 +10,8 @@ const Video = () => {
       withCredentials: true,
     });
 
+    console.log(res.data);
+
     // Only keep posts that are videos (image === '' and video !== '')
     const videoPosts = res.data.posts.filter(
       (post) => post.image === '' && post.video !== ''

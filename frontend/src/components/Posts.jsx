@@ -11,8 +11,7 @@ const Posts = () => {
 
   const fetchPosts = async () => {
     const res = await api.get(
-      '/post/all',
-      {withCredentials:true}
+      '/post/all'
     )
     console.log(res.data);
     setPosts(res.data.posts)

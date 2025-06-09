@@ -36,6 +36,7 @@ const Profile = () => {
         ? `/user/profile/${userId}`
         : `/user/profile`;
       const { data } = await api.get(endpoint, { withCredentials: true });
+    console.log(data);
 
       setUser(data);
       setPosts(data.posts?.filter((p) => !p.video) || []);

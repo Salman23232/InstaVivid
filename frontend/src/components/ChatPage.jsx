@@ -25,6 +25,8 @@ const ChatPage = () => {
           withCredentials: true,
         });
         setUsers(res.data);
+    console.log(res.data);
+
       } catch (err) {
         console.error("Failed to fetch users:", err.message);
       } finally {

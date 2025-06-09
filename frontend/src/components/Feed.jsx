@@ -24,6 +24,8 @@ const Feed = () => {
   const fetchStories = async () => {
     try {
       const res = await api.get("/story");
+    console.log(res.data);
+
       setStories(res.data);
     } catch (err) {
       console.error("Failed to load stories:", err);

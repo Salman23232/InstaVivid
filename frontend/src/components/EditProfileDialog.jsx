@@ -56,6 +56,7 @@ const saveProfileHandler = async () => {
 
     if (res.data) {
       toast.success("Profile updated");
+    console.log(res.data);
       dispatch(setAuthUser(res.data));
       refetch()
       setOpen(false)

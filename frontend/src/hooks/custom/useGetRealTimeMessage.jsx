@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
     const dispatch = useDispatch()
 useEffect(() => {
   socket?.on('newMessage', (newMessage) => {
+    console.log(newMessage);
     dispatch(setMessages([...messages, newMessage])); // 🔴 This causes stale state
   });
 }, [messages]);

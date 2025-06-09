@@ -27,6 +27,8 @@ const CommentsDialog = ({ open, setopen, post, refetch }) => {
         { text },
         { withCredentials: true }
       );
+    console.log(res.data);
+
       refetch();
       setText("");
     } catch (error) {

@@ -74,6 +74,8 @@ const Messages = () => {
       );
 
       if (data.success) {
+        console.log(data);
+        
         dispatch(setMessages([...messages, data.newMessage]));
         setMessage('');
       }

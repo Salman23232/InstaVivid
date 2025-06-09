@@ -14,6 +14,7 @@ const useGetAllMessages = (userId) => {
       try {
         const res = await api.get(`/message/all/${userId}`);
         if (res.data.success) {
+    console.log(res.data);
           dispatch(setMessages(res.data.messages));
         }
       } catch (err) {

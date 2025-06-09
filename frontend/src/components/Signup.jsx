@@ -28,6 +28,8 @@ const Signup = () => {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
+    console.log(res.data);
+
       if (res.data.success) {
         toast.success(res.data.message);
         setInput({ username: "", fullName: "", email: "", password: "" });

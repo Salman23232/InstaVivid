@@ -33,11 +33,12 @@ const Reels = ({ post, refetch }) => {
   const handleFollow = async (userId) => {
     const isFollowing = followStatus[userId] || false;
     try {
-      await api.post(
+      const res = await api.post(
         `/user/follow/${userId}`,
         {},
-        { withCredentials: true }
       );
+    console.log(res.data);
+
       setFollowStatus((prev) => ({
         ...prev,
         [userId]: !isFollowing,
@@ -50,11 +51,13 @@ const Reels = ({ post, refetch }) => {
 
   const handleLike = async () => {
     try {
-      await api.post(
+     const res = await api.post(
         `/post/like/${post._id}`,
         {},
         { withCredentials: true }
       );
+    console.log(res.data);
+
       setIsLiked(!isLiked);
       refetch();
     } catch (err) {
@@ -64,11 +67,13 @@ const Reels = ({ post, refetch }) => {
 
   const handleSave = async () => {
     try {
-      await api.post(
+     const res =  await api.post(
         `/post/bookmark/${post._id}`,
         {},
         { withCredentials: true }
       );
+    console.log(res.data);
+
       setIsBookmarked(!isBookmarked);
     } catch (err) {
       console.log(err);
@@ -77,10 +82,12 @@ const Reels = ({ post, refetch }) => {
 
   const handleDelete = async () => {
     try {
-      await api.delete(
+      const res = await api.delete(
         `/post/delete/${post._id}`,
         { withCredentials: true }
       );
+    console.log(res.data);
+
       refetch();
     } catch (err) {
       console.log(err);

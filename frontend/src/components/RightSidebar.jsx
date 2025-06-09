@@ -21,6 +21,8 @@ const RightSidebar = () => {
         const res = await api.get("/user/suggested", {
           withCredentials: true,
         });
+    console.log(res.data);
+
         const users = res.data.users || [];
         dispatch(setSuggestedUsers(users));
       } catch (err) {
@@ -38,11 +40,12 @@ const RightSidebar = () => {
     const isCurrentlyFollowed = followStatus[userId];
 
     try {
-      await api.post(
+      const res = await api.post(
         `/user/follow/${userId}`,
         {},
         { withCredentials: true }
       );
+    console.log(res.data);
 
       setFollowStatus((prev) => ({
         ...prev,

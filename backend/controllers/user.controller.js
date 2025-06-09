@@ -31,10 +31,20 @@ export const register = async (req, res) => {
       email,
     });
 
-    return res.status(201).json({
-      success: true,
-      message: "Account created successfully",
-    });
+const token = jwt.sign({ userid: newUser._id }, process.env.SECRET_KEY, {
+  expiresIn: "1d",
+});
+
+res.cookie("token", token, {
+  httpOnly:true,
+  sameSite: "none",
+  secure: true,  
+  maxAge: 86400000,
+}).json({
+  success: true,
+  message: "Account created successfully",
+  user: newUser, // optional
+});
   } catch (error) {
     console.log(error);
   }
@@ -84,7 +94,8 @@ export const login = async (req, res) => {
 
     return res.cookie("token", token, {
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "none",
+        secure:true,
         maxAge: 1 * 24 * 60 * 60 * 1000,
       }).json({
         message: `Welcome back ${user.username}`,
