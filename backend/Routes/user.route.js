@@ -12,7 +12,7 @@ router.route('/profile').get(isAuthenticated, getMe)
 router.route('/profile/:id').get(isAuthenticated, getProfile) 
 router.route('/profile/edit').put(isAuthenticated,upload.single('image'), editProfile)
 
-router.route('/suggested').get(isAuthenticated, getSuggestedUser)
-router.route('/follow/:id').post(isAuthenticated, followOrUnfolllow)
+router.route('/suggested').get(getSuggestedUser)
+router.route('/follow/:id').post(followOrUnfolllow)
 
 export default router
