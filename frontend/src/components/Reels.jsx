@@ -135,7 +135,6 @@ const Reels = ({ post, refetch }) => {
         ref={videoRef}
         src={post.video}
         className="absolute w-full h-full object-cover"
-        muted
         loop
         playsInline
       />
