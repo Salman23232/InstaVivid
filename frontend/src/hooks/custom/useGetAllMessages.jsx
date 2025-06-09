@@ -1,28 +1,27 @@
-import api from "@/api"
-import { setMessages } from "@/redux/Chatslice"
-import axios from "axios"
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessages } from "@/redux/Chatslice";
 
- const useGetAllMessages = () =>{
-    const {messages} = useSelector(state=>state.chat)
-    const dispatch = useDispatch()
-    const { selectedUser } = useSelector(state => state.auth);
+// useGetAllMessages.js
+const useGetAllMessages = (userId) => {
+  const dispatch = useDispatch();
 
-useEffect(() => {
-  if (!selectedUser?._id) return;
-  const fetchMessages = async () => {
-    const res = await api.get(`/message/all/${selectedUser._id}`, {
-      withCredentials: true,
-    });
-    if (res.data.success) {
-      dispatch(setMessages(res.data.messages));
-    }
-  };
+  useEffect(() => {
+    if (!userId) return;
 
-  fetchMessages();
-}, [selectedUser?._id]); // track ID changes
+    const fetchMessages = async () => {
+      try {
+        const res = await api.get(`/message/all/${userId}`);
+        if (res.data.success) {
+          dispatch(setMessages(res.data.messages));
+        }
+      } catch (err) {
+        console.error("Error fetching messages:", err.message);
+      }
+    };
 
-}
+    fetchMessages();
+  }, [userId]);
+};
 
-export default useGetAllMessages
+export default useGetAllMessages;

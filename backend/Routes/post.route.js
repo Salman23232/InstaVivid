@@ -27,12 +27,12 @@ router.route('/addpost').post(
 
 router.route('/all/').get(getAllPost);
 router.route('/:id').get(getPostById);
-router.route('/userpost/all').get(getUserPost);
-router.route('/like/:id').post(likePost);
+router.route('/userpost/all').get(isAuthenticated, getUserPost);
+router.route('/like/:id').post(isAuthenticated, likePost);
 router.route('/user/:userId').get(getPostsOfUser)
-router.route('/comment/:id').post(addComment);
+router.route('/comment/:id').post(isAuthenticated, addComment);
 router.route('/comment/all/:id').get(getCommentsOfPost);
 router.route('/delete/:id').delete(isAuthenticated, deletePost);
-router.route('/bookmark/:id').post(bookmarkPost);
+router.route('/bookmark/:id').post(isAuthenticated, bookmarkPost);
 
 export default router;

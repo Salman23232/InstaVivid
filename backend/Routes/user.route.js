@@ -8,11 +8,11 @@ router.route('/register').post(register)
 router.route('/login').post(login)
 router.route('/logout').get(logout)
 router.route('/all').get(getAllUser)
-router.route('/profile').get(getMe)
+router.route('/profile').get(isAuthenticated, getMe)
 router.route('/profile/:id').get(getProfile) 
-router.route('/profile/edit').put(upload.single('image'), editProfile)
+router.route('/profile/edit').put(isAuthenticated,upload.single('image'), editProfile)
 
-router.route('/suggested').get(getSuggestedUser)
-router.route('/follow/:id').post(followOrUnfolllow)
+router.route('/suggested').get(isAuthenticated, getSuggestedUser)
+router.route('/follow/:id').post(isAuthenticated, followOrUnfolllow)
 
 export default router

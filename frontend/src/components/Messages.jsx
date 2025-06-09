@@ -38,7 +38,7 @@ const Messages = () => {
     fetchUserProfile();
   }, [id]);
 
-  useGetAllMessages();
+  useGetAllMessages(id);
   useGetRealTimeMessage();
 
   // Filter messages between current user and selected user

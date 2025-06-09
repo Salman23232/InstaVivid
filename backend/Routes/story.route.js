@@ -18,7 +18,7 @@ storyRoutes
   .get(getStories)
   .post(isAuthenticated, upload.fields([{ name: "image" }, { name: "video" }]), createStory);
 
-storyRoutes.get("/view/:id", viewStory);
+storyRoutes.get("/view/:id", isAuthenticated, viewStory);
 storyRoutes.delete("/:id", isAuthenticated, deleteStory);
 
 export default storyRoutes;

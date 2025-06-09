@@ -6,15 +6,11 @@ import { useDispatch, useSelector } from "react-redux"
     const {messages} = useSelector(state=>state.chat)
     const {socket} = useSelector(state=>state.socket)
     const dispatch = useDispatch()
-    useEffect(() => {
-    const fetchMessages = async () => {
-        socket?.on('newMessage',(newMessage)=>{
-            dispatch(setMessages([...messages,newMessage]))
-        })
-    };
-
-  fetchMessages();
-}, [messages,setMessages]); // track ID changes
+useEffect(() => {
+  socket?.on('newMessage', (newMessage) => {
+    dispatch(setMessages([...messages, newMessage])); // 🔴 This causes stale state
+  });
+}, [messages]);
 
 }
 
