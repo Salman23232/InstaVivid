@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "@/redux/Authslice";
 import Messages from "./Messages";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MessageCircle } from "lucide-react";
 
 const ChatPage = () => {
   const [users, setUsers] = useState([]);
@@ -133,7 +133,8 @@ const ChatPage = () => {
             <Messages />
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-400 dark:text-gray-500 text-lg">
+          <div className="flex-1 flex items-center justify-center text-gray-400 dark:text-gray-500 text-lg h-screen">
+            <MessageCircle className="h-20 w-20"/>
             Select a chat to start messaging
           </div>
         )}

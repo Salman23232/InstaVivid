@@ -21,9 +21,6 @@ const __dirname = path.resolve()
 console.log(__dirname);
 
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
 
 // middlewares
 const corsOptions = {
@@ -45,7 +42,7 @@ app.use("/api/v1/story", storyRoutes);
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")))
 app.get("*",(req,res)=>{
-  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index."))
+  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
 })
 
 server.listen(port, (req, res) => {

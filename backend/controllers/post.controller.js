@@ -168,41 +168,55 @@ export const getUserPost = async (req, res) => {
 
 export const likePost = async (req, res) => {
   try {
-    const person_who_like = req.id
-    const postId = req.params.id
-    const post = await Post.findById(postId)
-    if (!post)
-      return res
-        .status(404)
-        .json({ success: false, message: "Post not found" });
-    const isLiked = post.likes.includes(person_who_like)  
-    const user = await User.findById(person_who_like).select('username profilePicture _id')
-    if (isLiked) {
-      post.likes.pull(person_who_like)
-      await post.save()
-      return res.status(200).json({message:"post disliked", post})
+    const person_who_like = req.id;
+    const postId = req.params.id;
+
+    // Find the post by ID
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found" });
     }
-    if (!isLiked) {
-  post.likes.push(person_who_like);
-  await post.save();
 
-  const receiverId = post.author.toString();
-  const receiverSocketId = getReceiverSocketId(receiverId);
+    // Check if the user has already liked the post
+    const isLiked = post.likes.includes(person_who_like);
 
-  if (receiverSocketId) {
-    io.to(receiverSocketId).emit("notification", {
-      type: "like",
-      postId,
-      by: user, // user who liked
-      message: `${user.username} liked your post.`
-    });
-  }
-}
+    // Fetch the user who is liking the post
+    const user = await User.findById(person_who_like).select('username profilePicture _id');
+
+    if (isLiked) {
+      // If already liked, remove the like (dislike)
+      post.likes.pull(person_who_like);
+      await post.save();
+      return res.status(200).json({ message: "Post disliked", post });
+    } else {
+      // If not liked, add like
+      post.likes.push(person_who_like);
+      await post.save();
+
+      const receiverId = post.author.toString();
+
+      // Only send notification if the post author is not the one who liked
+      if (receiverId !== person_who_like.toString()) {
+        const receiverSocketId = getReceiverSocketId(receiverId);
+
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit("notification", {
+            type: "like",
+            postId,
+            by: user, // User who liked the post
+            message: `${user.username} liked your post.`
+          });
+        }
+      }
+
+      return res.status(200).json({ message: "Post liked", post });
+    }
   } catch (error) {
-    console.log(error);
-    
+    console.log("Error in likePost:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};
+
 
 
 export const addComment = async (req, res) => {
