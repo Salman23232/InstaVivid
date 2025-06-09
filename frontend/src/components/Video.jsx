@@ -6,7 +6,7 @@ const Video = () => {
   const [posts, setPosts] = useState([]);
 
   const fetchPosts = async () => {
-    const res = await axios.get('http://localhost:8000/api/v1/post/all', {
+    const res = await axios.get('https://instavivid.onrender.com/api/v1/post/all', {
       withCredentials: true,
     });
 

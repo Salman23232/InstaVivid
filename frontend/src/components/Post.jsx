@@ -63,7 +63,7 @@ const Post = ({ post, refetch }) => {
       setLikeCount((prev) => prev + (updatedLike ? 1 : -1));
 
       await axios.post(
-        `http://localhost:8000/api/v1/post/like/${post._id}`,
+        `https://instavivid.onrender.com/api/v1/post/like/${post._id}`,
         {},
         { withCredentials: true }
       );
@@ -80,7 +80,7 @@ const Post = ({ post, refetch }) => {
       setIsBookmarked(updatedBookmark);
 
       await axios.post(
-        `http://localhost:8000/api/v1/post/bookmark/${post._id}`,
+        `https://instavivid.onrender.com/api/v1/post/bookmark/${post._id}`,
         {},
         { withCredentials: true }
       );
@@ -93,7 +93,7 @@ const Post = ({ post, refetch }) => {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `http://localhost:8000/api/v1/post/delete/${post._id}`,
+        `https://instavivid.onrender.com/api/v1/post/delete/${post._id}`,
         { withCredentials: true }
       );
       refetch();
@@ -106,7 +106,7 @@ const Post = ({ post, refetch }) => {
     const isFollowing = followStatus[userId] || false;
     try {
       await axios.post(
-        `http://localhost:8000/api/v1/user/follow/${userId}`,
+        `https://instavivid.onrender.com/api/v1/user/follow/${userId}`,
         {},
         { withCredentials: true }
       );

@@ -24,7 +24,7 @@ console.log(__dirname);
 
 // middlewares
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://instavivid.onrender.com",
   credentials: true,
 };
 

@@ -19,7 +19,7 @@ const RightSidebar = () => {
     const fetchSuggestedUsers = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:8000/api/v1/user/suggested", {
+        const res = await axios.get("https://instavivid.onrender.com/api/v1/user/suggested", {
           withCredentials: true,
         });
         const users = res.data.users || [];
@@ -40,7 +40,7 @@ const RightSidebar = () => {
 
     try {
       await axios.post(
-        `http://localhost:8000/api/v1/user/follow/${userId}`,
+        `https://instavivid.onrender.com/api/v1/user/follow/${userId}`,
         {},
         { withCredentials: true }
       );

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux"
 useEffect(() => {
   if (!selectedUser?._id) return;
   const fetchMessages = async () => {
-    const res = await axios.get(`http://localhost:8000/api/v1/message/all/${selectedUser._id}`, {
+    const res = await axios.get(`https://instavivid.onrender.com/api/v1/message/all/${selectedUser._id}`, {
       withCredentials: true,
     });
     if (res.data.success) {

@@ -21,7 +21,7 @@ const ChatPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const { data } = await axios.get("http://localhost:8000/api/v1/user/all", { withCredentials: true });
+        const { data } = await axios.get("https://instavivid.onrender.com/api/v1/user/all", { withCredentials: true });
         setUsers(data);
       } catch (err) {
         console.error("Failed to fetch users:", err.message);

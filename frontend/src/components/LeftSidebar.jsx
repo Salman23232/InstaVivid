@@ -60,7 +60,7 @@ const LeftSidebar = () => {
       if (!query) return setSearchResults([]);
       try {
         const res = await axios.get(
-          `http://localhost:8000/api/v1/user/all?query=${query}`
+          `https://instavivid.onrender.com/api/v1/user/all?query=${query}`
         );
         setSearchResults(res.data.users || []);
       } catch (err) {
@@ -95,7 +95,7 @@ const LeftSidebar = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/user/logout", {
+      const res = await axios.get("https://instavivid.onrender.com/api/v1/user/logout", {
         withCredentials: true,
       });
       if (res.data.success) {

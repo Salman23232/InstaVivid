@@ -11,7 +11,7 @@ const Posts = () => {
 
   const fetchPosts = async () => {
     const res = await axios.get(
-      'http://localhost:8000/api/v1/post/all',
+      'https://instavivid.onrender.com/api/v1/post/all',
       {withCredentials:true}
     )
     console.log(res.data);

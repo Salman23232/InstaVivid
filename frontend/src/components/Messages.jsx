@@ -26,7 +26,7 @@ const Messages = () => {
     const fetchUserProfile = async () => {
       if (!id) return;
       try {
-        const { data } = await axios.get(`http://localhost:8000/api/v1/user/profile/${id}`, {
+        const { data } = await axios.get(`https://instavivid.onrender.com/api/v1/user/profile/${id}`, {
           withCredentials: true,
         });
         setUser(data);
@@ -64,7 +64,7 @@ const Messages = () => {
 
     try {
       const { data } = await axios.post(
-        `http://localhost:8000/api/v1/message/send/${user._id}`,
+        `https://instavivid.onrender.com/api/v1/message/send/${user._id}`,
         { message },
         {
           headers: { 'Content-Type': 'application/json' },

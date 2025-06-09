@@ -43,7 +43,7 @@ const AddStoryDialog = ({ open, setOpen, fetchStories, currentUser }) => {
       formData.append(mediaType, storyFile);
 
       const res = await axios.post(
-        "https://localhost:8000/api/v1/story",
+        "https://instavivid.onrender.com/api/v1/story",
         formData,
         {
           withCredentials: true,

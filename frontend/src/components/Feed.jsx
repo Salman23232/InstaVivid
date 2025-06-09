@@ -22,7 +22,7 @@ const Feed = () => {
 
   const fetchStories = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/story");
+      const res = await axios.get("https://instavivid.onrender.com/api/v1/story");
     console.log(res.data);
 
       setStories(res.data);
@@ -35,7 +35,7 @@ const Feed = () => {
     setSelectedStory(story);
     setProgress(0);
     try {
-      await axios.get(`http://localhost:8000/api/v1/story/view/${story._id}`);
+      await axios.get(`https://instavivid.onrender.com/api/v1/story/view/${story._id}`);
     } catch (err) {
       console.error("Failed to mark story as viewed:", err);
     }

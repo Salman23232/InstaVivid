@@ -34,7 +34,7 @@ const Reels = ({ post, refetch }) => {
     const isFollowing = followStatus[userId] || false;
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/v1/user/follow/${userId}`,
+        `https://instavivid.onrender.com/api/v1/user/follow/${userId}`,
         {},
       );
     console.log(res.data);
@@ -52,7 +52,7 @@ const Reels = ({ post, refetch }) => {
   const handleLike = async () => {
     try {
      const res = await axios.post(
-        `http://localhost:8000/api/v1/post/like/${post._id}`,
+        `https://instavivid.onrender.com/api/v1/post/like/${post._id}`,
         {},
         { withCredentials: true }
       );
@@ -68,7 +68,7 @@ const Reels = ({ post, refetch }) => {
   const handleSave = async () => {
     try {
      const res =  await axios.post(
-        `http://localhost:8000/api/v1/post/bookmark/${post._id}`,
+        `https://instavivid.onrender.com/api/v1/post/bookmark/${post._id}`,
         {},
         { withCredentials: true }
       );
@@ -83,7 +83,7 @@ const Reels = ({ post, refetch }) => {
   const handleDelete = async () => {
     try {
       const res = await axios.delete(
-        `http://localhost:8000/api/v1/post/delete/${post._id}`,
+        `https://instavivid.onrender.com/api/v1/post/delete/${post._id}`,
         { withCredentials: true }
       );
     console.log(res.data);

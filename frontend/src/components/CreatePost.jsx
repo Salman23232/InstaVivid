@@ -49,7 +49,7 @@ const CreatePost = ({ open, setOpen }) => {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:8000/api/v1/post/addpost",
+        "https://instavivid.onrender.com/api/v1/post/addpost",
         formData,
         {
           withCredentials: true,

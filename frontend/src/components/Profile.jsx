@@ -33,8 +33,8 @@ const Profile = () => {
     try {
       setLoading(true);
       const endpoint = userId
-        ? `http://localhost:8000/api/v1/user/profile/${userId}`
-        : `http://localhost:8000/api/v1/user/profile`;
+        ? `https://instavivid.onrender.com/api/v1/user/profile/${userId}`
+        : `https://instavivid.onrender.com/api/v1/user/profile`;
       const { data } = await axios.get(endpoint, { withCredentials: true });
 
       setUser(data);
@@ -60,7 +60,7 @@ const Profile = () => {
     if (!postId) return;
     try {
       const { data: updatedPost } = await axios.get(
-        `http://localhost:8000/api/v1/post/${postId}`,
+        `https://instavivid.onrender.com/api/v1/post/${postId}`,
         { withCredentials: true }
       );
       setPosts((prev) => prev.map((p) => (p._id === postId ? updatedPost : p)));
@@ -74,7 +74,7 @@ const Profile = () => {
   const handleFollow = async () => {
     try {
       await axios.post(
-        `http://localhost:8000/api/v1/user/follow/${user?._id}`,
+        `https://instavivid.onrender.com/api/v1/user/follow/${user?._id}`,
         {},
         { withCredentials: true }
       );
