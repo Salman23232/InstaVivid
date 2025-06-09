@@ -10,7 +10,6 @@ import {
   Send,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { TbHeartFilled } from "react-icons/tb";
 import { BsBookmarkFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
