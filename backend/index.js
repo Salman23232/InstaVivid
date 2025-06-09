@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 
 // middlewares
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://instavivd-231.vercel.app",
   credentials: true,
 };
 
