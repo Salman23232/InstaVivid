@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import axios from "axios";
 import { assets } from "@/assets/asset";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
-import { BsGoogle } from "react-icons/bs";
 import api from "@/api";
 
 const Signup = () => {

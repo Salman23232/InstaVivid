@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { Button } from "./ui/button";
 import toast from "react-hot-toast";

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages } from "@/redux/Chatslice";
+import api from "@/api";
 
 // useGetAllMessages.js
 const useGetAllMessages = (userId) => {
