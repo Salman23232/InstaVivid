@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 import { MoreHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import api from "@/api";
 
 const CommentsDialog = ({ open, setopen, post, refetch }) => {
   const [text, setText] = useState("");
@@ -22,13 +21,11 @@ const CommentsDialog = ({ open, setopen, post, refetch }) => {
 
   const sendMessageHandler = async () => {
     try {
-      const res = await api.post(
+      const res = await axios.post(
         `/post/comment/${post._id}`,
         { text },
         { withCredentials: true }
       );
-    console.log(res.data);
-
       refetch();
       setText("");
     } catch (error) {

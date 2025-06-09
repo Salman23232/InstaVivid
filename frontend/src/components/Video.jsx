@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react';
 import Reels from './Reels';
-import api from '@/api';
+import axios from 'axios';
 
 const Video = () => {
   const [posts, setPosts] = useState([]);
 
   const fetchPosts = async () => {
-    const res = await api.get('/post/all', {
+    const res = await axios.get('http://localhost:8000/api/v1/post/all', {
       withCredentials: true,
     });
-
-    console.log(res.data);
 
     // Only keep posts that are videos (image === '' and video !== '')
     const videoPosts = res.data.posts.filter(

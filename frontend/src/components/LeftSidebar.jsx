@@ -22,7 +22,6 @@ import { Toaster } from "./ui/sonner";
 import CreatePost from "./CreatePost";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
-import api from "@/api";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
@@ -61,7 +60,7 @@ const LeftSidebar = () => {
       if (!query) return setSearchResults([]);
       try {
         const res = await axios.get(
-          `/user/all?query=${query}`
+          `http://localhost:8000/api/v1/user/all?query=${query}`
         );
         setSearchResults(res.data.users || []);
       } catch (err) {
@@ -96,7 +95,7 @@ const LeftSidebar = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await api.get("/user/logout", {
+      const res = await axios.get("http://localhost:8000/api/v1/user/logout", {
         withCredentials: true,
       });
       if (res.data.success) {
@@ -189,13 +188,13 @@ const LeftSidebar = () => {
                             >
                               <img
                                 src={user.profilePicture || "/default-avatar.png"}
-                                className="w-10 h-10 rounded-full object-cover"
+                                className="w-16 h-16 rounded-full object-cover"
                                 alt={user.username}
                               />
                               <div className="flex flex-col">
                                 <span className="text-sm">{user.username}</span>
                                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                                  followers: 88 M
+                                  followers: {user.follower.length}
                                 </span>
                               </div>
                             </div>

@@ -6,7 +6,6 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import toast from "react-hot-toast";
 import axios from "axios";
-import api from "@/api";
 
 const AddStoryDialog = ({ open, setOpen, fetchStories, currentUser }) => {
   const inputRef = useRef();
@@ -43,8 +42,8 @@ const AddStoryDialog = ({ open, setOpen, fetchStories, currentUser }) => {
       const formData = new FormData();
       formData.append(mediaType, storyFile);
 
-      const res = await api.post(
-        "/story",
+      const res = await axios.post(
+        "https://localhost:8000/api/v1/story",
         formData,
         {
           withCredentials: true,

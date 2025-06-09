@@ -8,7 +8,6 @@ import { FaPaperPlane } from 'react-icons/fa';
 import useGetAllMessages from '@/hooks/custom/useGetAllMessages';
 import useGetRealTimeMessage from '@/hooks/custom/useGetRealTimeMessage';
 import { setLastMessage, setMessages } from '@/redux/Chatslice';
-import api from '@/api';
 
 const Messages = () => {
   const dispatch = useDispatch();
@@ -27,7 +26,7 @@ const Messages = () => {
     const fetchUserProfile = async () => {
       if (!id) return;
       try {
-        const { data } = await api.get(`/user/profile/${id}`, {
+        const { data } = await axios.get(`http://localhost:8000/api/v1/user/profile/${id}`, {
           withCredentials: true,
         });
         setUser(data);
@@ -38,7 +37,7 @@ const Messages = () => {
     fetchUserProfile();
   }, [id]);
 
-  useGetAllMessages(id);
+  useGetAllMessages();
   useGetRealTimeMessage();
 
   // Filter messages between current user and selected user
@@ -64,8 +63,8 @@ const Messages = () => {
     if (!message.trim() || !user?._id) return;
 
     try {
-      const { data } = await api.post(
-        `/message/send/${user._id}`,
+      const { data } = await axios.post(
+        `http://localhost:8000/api/v1/message/send/${user._id}`,
         { message },
         {
           headers: { 'Content-Type': 'application/json' },
@@ -74,8 +73,6 @@ const Messages = () => {
       );
 
       if (data.success) {
-        console.log(data);
-        
         dispatch(setMessages([...messages, data.newMessage]));
         setMessage('');
       }

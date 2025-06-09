@@ -10,13 +10,13 @@ import {
   Send,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import axios from "axios";
 import { TbHeartFilled } from "react-icons/tb";
 import { BsBookmarkFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import CommentsDialog from "./CommentsDialog";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
-import api from "@/api";
 
 const Post = ({ post, refetch }) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -62,12 +62,11 @@ const Post = ({ post, refetch }) => {
       setIsLiked(updatedLike);
       setLikeCount((prev) => prev + (updatedLike ? 1 : -1));
 
-      const res = await api.post(
-        `/post/like/${post._id}`,
-        {}
+      await axios.post(
+        `http://localhost:8000/api/v1/post/like/${post._id}`,
+        {},
+        { withCredentials: true }
       );
-      console.log(res.data);
-      
     } catch (err) {
       toast.error("Failed to update like");
       setIsLiked((prev) => !prev);
@@ -80,13 +79,11 @@ const Post = ({ post, refetch }) => {
       const updatedBookmark = !isBookmarked;
       setIsBookmarked(updatedBookmark);
 
-      const res = await api.post(
-        `/post/bookmark/${post._id}`,
+      await axios.post(
+        `http://localhost:8000/api/v1/post/bookmark/${post._id}`,
         {},
         { withCredentials: true }
       );
-      console.log(res.data);
-      
     } catch (err) {
       toast.error("Failed to save post");
       setIsBookmarked((prev) => !prev);
@@ -95,11 +92,10 @@ const Post = ({ post, refetch }) => {
 
   const handleDelete = async () => {
     try {
-      const res = await api.delete(
-        `/post/delete/${post._id}`,
+      await axios.delete(
+        `http://localhost:8000/api/v1/post/delete/${post._id}`,
+        { withCredentials: true }
       );
-      console.log(res.data);
-      
       refetch();
     } catch (err) {
       toast.error("Failed to delete post");
@@ -109,13 +105,11 @@ const Post = ({ post, refetch }) => {
   const handleFollow = async (userId) => {
     const isFollowing = followStatus[userId] || false;
     try {
-     const res = await api.post(
-        `/user/follow/${userId}`,
+      await axios.post(
+        `http://localhost:8000/api/v1/user/follow/${userId}`,
         {},
         { withCredentials: true }
       );
-      console.log(res.data);
-      
       setFollowStatus((prev) => ({
         ...prev,
         [userId]: !isFollowing,

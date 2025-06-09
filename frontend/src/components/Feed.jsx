@@ -7,7 +7,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import AddStoryDialog from "./AddStoryDialog";
 import Posts from "./Posts";
-import api from "@/api";
 
 const Feed = () => {
   const currentUser = useSelector((state) => state.auth.user);
@@ -23,7 +22,7 @@ const Feed = () => {
 
   const fetchStories = async () => {
     try {
-      const res = await api.get("/story");
+      const res = await axios.get("http://localhost:8000/api/v1/story");
     console.log(res.data);
 
       setStories(res.data);
@@ -36,7 +35,7 @@ const Feed = () => {
     setSelectedStory(story);
     setProgress(0);
     try {
-      await axios.get(`/story/view/${story._id}`);
+      await axios.get(`http://localhost:8000/api/v1/story/view/${story._id}`);
     } catch (err) {
       console.error("Failed to mark story as viewed:", err);
     }

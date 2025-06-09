@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import api from "@/api";
+import axios from "axios";
 
 const Reels = ({ post, refetch }) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -33,8 +33,8 @@ const Reels = ({ post, refetch }) => {
   const handleFollow = async (userId) => {
     const isFollowing = followStatus[userId] || false;
     try {
-      const res = await api.post(
-        `/user/follow/${userId}`,
+      const res = await axios.post(
+        `http://localhost:8000/api/v1/user/follow/${userId}`,
         {},
       );
     console.log(res.data);
@@ -51,8 +51,8 @@ const Reels = ({ post, refetch }) => {
 
   const handleLike = async () => {
     try {
-     const res = await api.post(
-        `/post/like/${post._id}`,
+     const res = await axios.post(
+        `http://localhost:8000/api/v1/post/like/${post._id}`,
         {},
         { withCredentials: true }
       );
@@ -67,8 +67,8 @@ const Reels = ({ post, refetch }) => {
 
   const handleSave = async () => {
     try {
-     const res =  await api.post(
-        `/post/bookmark/${post._id}`,
+     const res =  await axios.post(
+        `http://localhost:8000/api/v1/post/bookmark/${post._id}`,
         {},
         { withCredentials: true }
       );
@@ -82,8 +82,8 @@ const Reels = ({ post, refetch }) => {
 
   const handleDelete = async () => {
     try {
-      const res = await api.delete(
-        `/post/delete/${post._id}`,
+      const res = await axios.delete(
+        `http://localhost:8000/api/v1/post/delete/${post._id}`,
         { withCredentials: true }
       );
     console.log(res.data);

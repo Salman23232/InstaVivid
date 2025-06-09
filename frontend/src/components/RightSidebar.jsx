@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { Button } from "./ui/button";
 import toast from "react-hot-toast";
@@ -6,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setSuggestedUsers } from "@/redux/Authslice";
 import { Skeleton } from "./ui/skeleton";
-import api from "@/api";
+
 
 const RightSidebar = () => {
   const dispatch = useDispatch();
@@ -18,11 +19,9 @@ const RightSidebar = () => {
     const fetchSuggestedUsers = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/user/suggested", {
+        const res = await axios.get("http://localhost:8000/api/v1/user/suggested", {
           withCredentials: true,
         });
-    console.log(res.data);
-
         const users = res.data.users || [];
         dispatch(setSuggestedUsers(users));
       } catch (err) {
@@ -40,12 +39,11 @@ const RightSidebar = () => {
     const isCurrentlyFollowed = followStatus[userId];
 
     try {
-      const res = await api.post(
-        `/user/follow/${userId}`,
+      await axios.post(
+        `http://localhost:8000/api/v1/user/follow/${userId}`,
         {},
         { withCredentials: true }
       );
-    console.log(res.data);
 
       setFollowStatus((prev) => ({
         ...prev,

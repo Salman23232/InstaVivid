@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useSelector, useDispatch } from "react-redux";
 import { setFollowers, setFollowings, setIsFollowing } from "@/redux/Authslice";
 import { Skeleton } from "./ui/skeleton";
-import api from "@/api";
+import axios from "axios";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -33,10 +33,9 @@ const Profile = () => {
     try {
       setLoading(true);
       const endpoint = userId
-        ? `/user/profile/${userId}`
-        : `/user/profile`;
-      const { data } = await api.get(endpoint, { withCredentials: true });
-    console.log(data);
+        ? `http://localhost:8000/api/v1/user/profile/${userId}`
+        : `http://localhost:8000/api/v1/user/profile`;
+      const { data } = await axios.get(endpoint, { withCredentials: true });
 
       setUser(data);
       setPosts(data.posts?.filter((p) => !p.video) || []);
@@ -60,8 +59,8 @@ const Profile = () => {
   const refetchPost = async (postId) => {
     if (!postId) return;
     try {
-      const { data: updatedPost } = await api.get(
-        `/post/${postId}`,
+      const { data: updatedPost } = await axios.get(
+        `http://localhost:8000/api/v1/post/${postId}`,
         { withCredentials: true }
       );
       setPosts((prev) => prev.map((p) => (p._id === postId ? updatedPost : p)));
@@ -74,8 +73,8 @@ const Profile = () => {
 
   const handleFollow = async () => {
     try {
-      await api.post(
-        `/user/follow/${user?._id}`,
+      await axios.post(
+        `http://localhost:8000/api/v1/user/follow/${user?._id}`,
         {},
         { withCredentials: true }
       );
@@ -206,7 +205,7 @@ const Profile = () => {
                   </div>
                   <div className="flex items-center gap-1">
                     <MessageCircle className="w-4 h-4" />
-                    {post.comments?.length || 0}
+                    {post?.comments?.length || 0}
                   </div>
                 </div>
               </div>

@@ -1,11 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { assets } from "@/assets/asset";
-import api from "@/api";
+import axios from "axios";
+
 
 const Signup = () => {
   const [input, setInput] = useState({
@@ -24,12 +25,10 @@ const Signup = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await api.post("/user/register", input, {
+      const res = await axios.post("http://localhost:8000/api/v1/user/register", input, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-    console.log(res.data);
-
       if (res.data.success) {
         toast.success(res.data.message);
         setInput({ username: "", fullName: "", email: "", password: "" });

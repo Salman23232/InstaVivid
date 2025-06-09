@@ -13,7 +13,6 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setAuthUser } from "@/redux/Authslice";
 import { toast } from "sonner";
-import api from "@/api";
 
 const EditProfileDialog = ({ refetch, open, setOpen , user}) => {
   const [username, setUsername] = useState(user.username);
@@ -47,7 +46,7 @@ const saveProfileHandler = async () => {
   }
 
   try {
-    const res = await api.put("/user/profile/edit", data, {
+    const res = await axios.put("/user/profile/edit", data, {
       withCredentials: true,
       headers: {
         "Content-Type": "multipart/form-data",
