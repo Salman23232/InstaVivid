@@ -55,7 +55,7 @@ const Login = () => {
         {/* Right Side Form */}
         <div className="w-full max-w-sm">
           <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 p-8 rounded-lg text-center shadow-sm">
-            <h1 className="text-4xl satisfy-regular text-black dark:text-white mb-6">Instagram</h1>
+            <h1 className="text-4xl satisfy-regular text-black dark:text-white mb-6">Instavivid</h1>
 
             <form onSubmit={loginHandler} className="space-y-4">
               <Input

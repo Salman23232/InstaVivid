@@ -55,7 +55,7 @@ const Signup = () => {
         {/* Right Side Form */}
         <div className="w-full max-w-sm">
           <div className="bg-gray-50 dark:bg-neutral-900 dark:border-neutral-700 p-8 rounded-md text-center">
-            <h1 className="text-4xl satisfy-regular mb-5">Instagram</h1>
+            <h1 className="text-4xl satisfy-regular mb-5">Instavivid</h1>
 
             {/* <div  className="mb-4 w-80 flex items-center justify-center gap-3 text-blue-500 font-bold text-[14px]">
              <BsGoogle /> 
