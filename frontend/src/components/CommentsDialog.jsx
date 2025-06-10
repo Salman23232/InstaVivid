@@ -22,7 +22,7 @@ const CommentsDialog = ({ open, setopen, post, refetch }) => {
   const sendMessageHandler = async () => {
     try {
       const res = await axios.post(
-        `https://instavivid.onrender.com/post/comment/${post._id}`,
+        `https://instavivid.onrender.com/api/v1/post/comment/${post._id}`,
         { text },
         { withCredentials: true }
       );
