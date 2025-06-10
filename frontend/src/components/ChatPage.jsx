@@ -12,7 +12,7 @@ const ChatPage = () => {
   const [loading, setLoading] = useState(true);
 
   const { suggestedUsers, selectedUser } = useSelector((state) => state.auth);
-  const { onlineUsers, lastMessage } = useSelector((state) => state.chat);
+  const { onlineUsers } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -92,11 +92,9 @@ const ChatPage = () => {
                         <span className="absolute w-2 h-2 rounded-full bg-green-500 -right-3 top-0"></span>
                       )}
                     </p>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                    </span>
                   </div>
-                  <p className={`text-sm text-gray-600 dark:text-gray-400 truncate ${onlineUsers.includes(selectedUser?._id) ? "text-green-500" : "text-red-500"}`}>
-                    {onlineUsers.includes(selectedUser?._id) ? "Online" : "Offline"}
+                  <p className={`text-sm text-gray-600 dark:text-gray-400 truncate ${isOnline ? "text-green-500" : "text-red-500"}`}>
+                    {isOnline ? "Online" : "Offline"}
                   </p>
                 </div>
               </div>
@@ -134,7 +132,7 @@ const ChatPage = () => {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-400 dark:text-gray-500 text-lg h-screen">
-            <MessageCircle className="h-20 w-20"/>
+            <MessageCircle className="h-20 w-20" />
             Select a chat to start messaging
           </div>
         )}
